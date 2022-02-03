@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Square from "../components/Square";
 import startingPositions from "../scripts/starting-positions";
+import moveValidity from "../scripts/move-validity/moveValidity";
 
 import "./Chessboard.css";
 
@@ -9,7 +10,7 @@ const Chessboard: React.FC = () => {
   const [positions, setPositions] = useState(startingPositions);
   const [activePlayer, setActivePlayer] = useState<"white" | "black">("white");
 
-  const moveHandler = (figureID: number, squareID: number) => {
+  const updatePositions = (figureID: number, squareID: number) => {
     setPositions((prevPositions) => {
       const newPositions = { ...prevPositions };
       newPositions[squareID] = newPositions[figureID];
@@ -33,7 +34,9 @@ const Chessboard: React.FC = () => {
         setSelectedFigure(null);
         return;
       }
-      moveHandler(selectedFigure, selectedSquare);
+      moveValidity(selectedFigure, selectedSquare, positions)
+        ? updatePositions(selectedFigure, selectedSquare)
+        : setSelectedFigure(null);
       return;
     }
     if (

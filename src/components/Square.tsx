@@ -26,6 +26,7 @@ const Square: React.FC<SquareProps> = ({
       onClick={() => onClick(id)}
     >
       {figure && <Figure src={figure} />}
+      {id}
     </div>
   );
 };
