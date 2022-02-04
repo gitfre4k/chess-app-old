@@ -1,16 +1,7 @@
 import isPathFree from "../isPathFree";
+import { Positions } from "../../starting-positions";
 
-const rook = (
-  pos1: number,
-  pos2: number,
-  positions: {
-    [key: number]: [
-      string,
-      "black" | "white",
-      "rook" | "knight" | "bishop" | "queen" | "king" | "pawn"
-    ];
-  }
-) => {
+const rook = (pos1: number, pos2: number, positions: Positions) => {
   if ((pos1 - pos2) % 8 === 0) {
     return isPathFree(pos1, pos2, positions, Math.abs((pos1 - pos2) / 8), 8);
   }

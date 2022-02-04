@@ -1,14 +1,6 @@
-const pawn = (
-  pos1: number,
-  pos2: number,
-  positions: {
-    [key: number]: [
-      string,
-      "black" | "white",
-      "rook" | "knight" | "bishop" | "queen" | "king" | "pawn"
-    ];
-  }
-) => {
+import { Positions } from "../../starting-positions";
+
+const pawn = (pos1: number, pos2: number, positions: Positions) => {
   if (positions[pos2] === undefined) {
     if (positions[pos1][1] === "white") {
       if (pos1 - pos2 === 8) return true;

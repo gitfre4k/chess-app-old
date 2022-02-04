@@ -1,13 +1,9 @@
+import { Positions } from "../starting-positions";
+
 const isPathFree = (
   pos1: number,
   pos2: number,
-  positions: {
-    [key: number]: [
-      string,
-      "black" | "white",
-      "rook" | "knight" | "bishop" | "queen" | "king" | "pawn"
-    ];
-  },
+  positions: Positions,
   distance: number,
   step: number
 ) => {
