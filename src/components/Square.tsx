@@ -8,6 +8,7 @@ interface SquareProps {
   onClick: (id: number) => void;
   selectedSquare: number | null;
   figure?: string;
+  validMoves: number[];
 }
 
 const Square: React.FC<SquareProps> = ({
@@ -16,13 +17,12 @@ const Square: React.FC<SquareProps> = ({
   id,
   onClick,
   selectedSquare,
+  validMoves,
 }) => {
   return (
     <div
-      className="square"
-      style={
-        id === selectedSquare ? { background: "green" } : { background: color }
-      }
+      className={validMoves.includes(id) ? "square valid-move" : "square"}
+      style={id === selectedSquare ? { background: "green" } : { background: color }}
       onClick={() => onClick(id)}
     >
       {figure && <Figure src={figure} />}

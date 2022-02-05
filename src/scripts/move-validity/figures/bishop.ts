@@ -1,7 +1,7 @@
 import isPathFree from "../isPathFree";
-import { Positions } from "../../starting-positions";
+import { PositionsType } from "../../starting-positions";
 
-const bishop = (pos1: number, pos2: number, positions: Positions) => {
+const bishop = (pos1: number, pos2: number, positions: PositionsType) => {
   if ((pos1 - pos2) % 7 === 0) {
     return isPathFree(pos1, pos2, positions, Math.abs((pos1 - pos2) / 7), 7);
   }

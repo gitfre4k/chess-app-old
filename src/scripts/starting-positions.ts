@@ -11,7 +11,7 @@ import WhitePawn from "../img/WhitePawn.png";
 import WhiteQueen from "../img/WhiteQueen.png";
 import WhiteRook from "../img/WhiteRook.png";
 
-export type Positions = {
+export type PositionsType = {
   [key: number]: [
     string,
     "black" | "white",
@@ -19,7 +19,7 @@ export type Positions = {
   ];
 };
 
-const startingPositions: Positions = {
+const startingPositions: PositionsType = {
   1: [BlackRook, "black", "rook"],
   2: [BlackKnight, "black", "knight"],
   3: [BlackBishop, "black", "bishop"],

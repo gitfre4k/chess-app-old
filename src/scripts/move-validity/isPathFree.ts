@@ -1,9 +1,9 @@
-import { Positions } from "../starting-positions";
+import { PositionsType } from "../starting-positions";
 
 const isPathFree = (
   pos1: number,
   pos2: number,
-  positions: Positions,
+  positions: PositionsType,
   distance: number,
   step: number
 ) => {
