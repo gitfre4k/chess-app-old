@@ -1,4 +1,3 @@
-import { xyNotation } from "../../config/square-notation";
 import Figure from "./Figure";
 
 import "./Square.css";
@@ -11,6 +10,7 @@ interface SquareProps {
   figure?: string;
   onClick: (x: number, y: number) => void;
   selectedFigure?: [number, number];
+  validMoves: string[];
 }
 
 const Square: React.FC<SquareProps> = ({
@@ -21,10 +21,11 @@ const Square: React.FC<SquareProps> = ({
   figure,
   onClick,
   selectedFigure,
+  validMoves,
 }) => {
   return (
     <div
-      className="square"
+      className={validMoves.includes(`${x}${y}`) ? "square valid-move" : "square"}
       style={
         selectedFigure && selectedFigure[0] === x && selectedFigure[1] === y
           ? { background: "green" }
