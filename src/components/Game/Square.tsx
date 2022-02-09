@@ -33,7 +33,7 @@ const Square: React.FC<SquareProps> = ({
       }
       onClick={() => onClick(x, y)}
     >
-      {/* {notation} */}
+      {notation}
       {figure && <Figure src={figure} />}
     </div>
   );
