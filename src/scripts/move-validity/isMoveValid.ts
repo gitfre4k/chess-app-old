@@ -11,21 +11,16 @@ const isMoveValid = (
   positions: {
     [key: string]: string | undefined;
   },
-  enPassantMoves: {
+  enPassantMoves?: {
     white: [string[], string] | undefined;
     black: [string[], string] | undefined;
-  },
-  setPositions?: React.Dispatch<
-    React.SetStateAction<{
-      [key: string]: string | undefined;
-    }>
-  >
+  }
 ) => {
   const figure = figureName(positions[moveInfo[0]]);
   if (figureColor(positions[moveInfo[0]]) === figureColor(positions[moveInfo[1]])) return false;
   switch (figure) {
     case "pawn":
-      return pawnValidity(moveInfo, positions, enPassantMoves, setPositions);
+      return pawnValidity(moveInfo, positions, enPassantMoves);
     case "rook":
       return rookValidity(moveInfo, positions);
     case "knight":

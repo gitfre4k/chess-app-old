@@ -6,26 +6,37 @@ interface SquareProps {
   color: string;
   x: number;
   y: number;
-  notation: string;
   figure?: string;
   onClick: (x: number, y: number) => void;
   selectedFigure?: [number, number];
   validMoves: string[];
+  check: {
+    white: boolean;
+    black: boolean;
+  };
 }
 
 const Square: React.FC<SquareProps> = ({
   color,
   x,
   y,
-  notation,
   figure,
   onClick,
   selectedFigure,
   validMoves,
+  check,
 }) => {
+  let squareClass = "square ";
+  if (validMoves.includes(`${x}${y}`)) squareClass = squareClass + "valid-move ";
+  if (
+    (check.white && figure?.includes("WhiteKing")) ||
+    (check.black && figure?.includes("BlackKing"))
+  )
+    squareClass = squareClass + "check";
+
   return (
     <div
-      className={validMoves.includes(`${x}${y}`) ? "square valid-move" : "square"}
+      className={squareClass}
       style={
         selectedFigure && selectedFigure[0] === x && selectedFigure[1] === y
           ? { background: "green" }
@@ -33,7 +44,7 @@ const Square: React.FC<SquareProps> = ({
       }
       onClick={() => onClick(x, y)}
     >
-      {notation}
+      {/* {notation} */}
       {figure && <Figure src={figure} />}
     </div>
   );

@@ -6,6 +6,7 @@ import startingPositions from "../../config/starting-positions";
 import { figureColor } from "../../scripts/figureInfo";
 import isMoveValid from "../../scripts/move-validity/isMoveValid";
 import checkForEnPassant from "../../scripts/move-validity/checkForEnPassant";
+import isKingSafe from "../../scripts/move-validity/isKingSafe";
 
 import "./Chessboard.css";
 
@@ -26,6 +27,12 @@ const Chessboard: React.FC = () => {
       activePlayer === "white" ? (newValue.black = undefined) : (newValue.white = undefined);
       return newValue;
     });
+    setCheck((prevValue) => {
+      const newValue = { ...prevValue };
+      newValue[activePlayer] = !isKingSafe(["CHECK", activePlayer], positions);
+      activePlayer === "white" ? (newValue.black = false) : (newValue.white = false);
+      return newValue;
+    });
   }, [activePlayer]);
 
   const squareClickHandler = (x: number, y: number) => {
@@ -35,11 +42,13 @@ const Chessboard: React.FC = () => {
       activePlayer === figureColor(positions[`${x}${y}`])
     ) {
       setSelectedFigure([x, y]);
-      let newValidMoves: string[] = [];
+      const allValidMoves: string[] = [];
       for (const [key] of Object.entries(positions)) {
-        isMoveValid([`${x}${y}`, `${key}`], positions, enPassantMoves) && newValidMoves.push(key);
+        const moveInfo = [`${x}${y}`, `${key}`];
+        if (isMoveValid(moveInfo, positions, enPassantMoves) && isKingSafe(moveInfo, positions))
+          allValidMoves.push(key);
       }
-      setValidMoves(newValidMoves);
+      setValidMoves(allValidMoves);
       return;
     }
     if (selectedFigure) {
@@ -49,14 +58,23 @@ const Chessboard: React.FC = () => {
         return;
       }
       const moveInfo = [`${selectedFigure[0]}${selectedFigure[1]}`, `${x}${y}`];
-      if (isMoveValid(moveInfo, positions, enPassantMoves, setPositions)) {
+      if (isMoveValid(moveInfo, positions, enPassantMoves) && isKingSafe(moveInfo, positions)) {
         setPositions((prevPositions) => {
           const newPositions = { ...prevPositions };
+          if (
+            enPassantMoves[activePlayer]?.[0].includes(moveInfo[0]) &&
+            enPassantMoves[activePlayer]?.[1] === moveInfo[1]
+          ) {
+            const xAxis = Number(moveInfo[1].charAt(0));
+            const yAxis = Number(moveInfo[1].charAt(1)) - (activePlayer === "white" ? 1 : -1);
+            newPositions[`${xAxis}${yAxis}`] = undefined;
+          }
           newPositions[moveInfo[1]] = newPositions[moveInfo[0]];
           newPositions[moveInfo[0]] = undefined;
           return newPositions;
         });
         checkForEnPassant(moveInfo, positions, setEnPassantMoves);
+
         setActivePlayer((prevValue) => {
           if (prevValue === "white") return "black";
           return "white";
@@ -76,11 +94,11 @@ const Chessboard: React.FC = () => {
           x={square[0]}
           y={square[1]}
           color={(square[0] + square[1]) % 2 === 0 ? "#441a03" : "#b5915f"}
-          notation={algebraicNotation[index]}
           figure={positions[`${square[0]}${square[1]}`]}
           onClick={squareClickHandler}
           selectedFigure={selectedFigure}
           validMoves={validMoves}
+          check={check}
         ></Square>
       );
     });

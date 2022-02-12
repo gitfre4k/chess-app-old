@@ -1,7 +1,7 @@
 const figureColor = (figure: string | undefined) => {
   if (!figure) return "error";
   if (figure.includes("White")) return "white";
-  return "black";
+  else return "black";
 };
 
 const figureName = (figure: string | undefined) => {
@@ -11,4 +11,5 @@ const figureName = (figure: string | undefined) => {
   }
   return "error";
 };
+
 export { figureColor, figureName };
