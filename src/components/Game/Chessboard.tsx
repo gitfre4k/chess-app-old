@@ -3,10 +3,11 @@ import { useState, useEffect } from "react";
 import Square from "./Square";
 import { algebraicNotation, xyNotation } from "../../config/square-notation";
 import startingPositions from "../../config/starting-positions";
-import { figureColor } from "../../scripts/figureInfo";
+import { figureColor, figureName } from "../../scripts/figureInfo";
 import isMoveValid from "../../scripts/move-validity/isMoveValid";
 import checkForEnPassant from "../../scripts/move-validity/checkForEnPassant";
 import isKingSafe from "../../scripts/move-validity/isKingSafe";
+import updateCastlingStatus from "../../scripts/move-validity/updateCastlingStatus";
 
 import "./Chessboard.css";
 
@@ -20,6 +21,10 @@ const Chessboard: React.FC = () => {
     black: [string[], string] | undefined;
   }>({ white: undefined, black: undefined });
   const [check, setCheck] = useState({ white: false, black: false });
+  const [castling, setCastling] = useState({
+    white: { short: true, long: true },
+    black: { short: true, long: true },
+  });
 
   useEffect(() => {
     setEnPassantMoves((prevValue) => {
@@ -45,7 +50,10 @@ const Chessboard: React.FC = () => {
       const allValidMoves: string[] = [];
       for (const [key] of Object.entries(positions)) {
         const moveInfo = [`${x}${y}`, `${key}`];
-        if (isMoveValid(moveInfo, positions, enPassantMoves) && isKingSafe(moveInfo, positions))
+        if (
+          isMoveValid(moveInfo, positions, enPassantMoves, castling) &&
+          isKingSafe(moveInfo, positions)
+        )
           allValidMoves.push(key);
       }
       setValidMoves(allValidMoves);
@@ -58,23 +66,35 @@ const Chessboard: React.FC = () => {
         return;
       }
       const moveInfo = [`${selectedFigure[0]}${selectedFigure[1]}`, `${x}${y}`];
-      if (isMoveValid(moveInfo, positions, enPassantMoves) && isKingSafe(moveInfo, positions)) {
+      if (
+        isMoveValid(moveInfo, positions, enPassantMoves, castling) &&
+        isKingSafe(moveInfo, positions)
+      ) {
         setPositions((prevPositions) => {
           const newPositions = { ...prevPositions };
           if (
             enPassantMoves[activePlayer]?.[0].includes(moveInfo[0]) &&
             enPassantMoves[activePlayer]?.[1] === moveInfo[1]
           ) {
-            const xAxis = Number(moveInfo[1].charAt(0));
+            const xAxis = moveInfo[1].charAt(0);
             const yAxis = Number(moveInfo[1].charAt(1)) - (activePlayer === "white" ? 1 : -1);
-            newPositions[`${xAxis}${yAxis}`] = undefined;
+            newPositions[xAxis + `${yAxis}`] = undefined;
+          }
+          if (
+            figureName(positions[moveInfo[0]]) === "king" &&
+            Math.abs(Number(moveInfo[0].charAt(0)) - Number(moveInfo[1].charAt(0))) === 2
+          ) {
+            const xAxis = moveInfo[1].charAt(0) === "3" ? "4" : "6";
+            const yAxis = moveInfo[0].charAt(1);
+            newPositions[xAxis + yAxis] = newPositions[(xAxis === "4" ? "1" : "8") + yAxis];
+            newPositions[(xAxis === "4" ? "1" : "8") + yAxis] = undefined;
           }
           newPositions[moveInfo[1]] = newPositions[moveInfo[0]];
           newPositions[moveInfo[0]] = undefined;
           return newPositions;
         });
         checkForEnPassant(moveInfo, positions, setEnPassantMoves);
-
+        updateCastlingStatus(moveInfo, setCastling);
         setActivePlayer((prevValue) => {
           if (prevValue === "white") return "black";
           return "white";

@@ -14,6 +14,16 @@ const isMoveValid = (
   enPassantMoves?: {
     white: [string[], string] | undefined;
     black: [string[], string] | undefined;
+  },
+  castling?: {
+    white: {
+      short: boolean;
+      long: boolean;
+    };
+    black: {
+      short: boolean;
+      long: boolean;
+    };
   }
 ) => {
   const figure = figureName(positions[moveInfo[0]]);
@@ -30,9 +40,10 @@ const isMoveValid = (
     case "queen":
       return queenValidity(moveInfo, positions);
     case "king":
-      return kingValidity(moveInfo);
+      return kingValidity(moveInfo, positions, castling);
+    default:
+      return false;
   }
-  return false;
 };
 
 export default isMoveValid;
