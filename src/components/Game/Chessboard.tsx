@@ -2,7 +2,16 @@ import { useState, useEffect } from "react";
 
 import Square from "./Square";
 import { algebraicNotation, xyNotation } from "../../config/square-notation";
-import startingPositions, { WhiteQueen, BlackQueen } from "../../config/starting-positions";
+import startingPositions, {
+  WhiteQueen,
+  BlackQueen,
+  WhiteKnight,
+  BlackKnight,
+  WhiteBishop,
+  BlackBishop,
+  WhiteRook,
+  BlackRook,
+} from "../../config/starting-positions";
 import { figureColor, figureName } from "../../scripts/figureInfo";
 import isMoveValid from "../../scripts/move-validity/isMoveValid";
 import checkForEnPassant from "../../scripts/move-validity/checkForEnPassant";
@@ -25,6 +34,7 @@ const Chessboard: React.FC = () => {
     white: { short: true, long: true },
     black: { short: true, long: true },
   });
+  const [pawnPromotion, setPawnPromotion] = useState("");
   const [mate, setMate] = useState(false);
 
   useEffect(() => {
@@ -47,13 +57,14 @@ const Chessboard: React.FC = () => {
         if (isMoveValid([x, y], positions) && isKingSafe([x, y], positions)) isMate = false;
     }
     isMate && setMate(true);
-  }, [activePlayer]);
+  }, [activePlayer, pawnPromotion]);
 
   useEffect(() => {
     mate && (check[activePlayer] ? alert("checkmate") : alert("stalemate"));
   }, [mate]);
 
   const squareClickHandler = (x: number, y: number) => {
+    if (pawnPromotion) return;
     if (
       !selectedFigure &&
       positions[`${x}${y}`] &&
@@ -104,13 +115,19 @@ const Chessboard: React.FC = () => {
           }
           newPositions[moveInfo[1]] = newPositions[moveInfo[0]];
           newPositions[moveInfo[0]] = undefined;
-          if (figureName(positions[moveInfo[0]]) === "pawn" && moveInfo[1].charAt(1) === "8") {
-            newPositions[moveInfo[1]] = activePlayer === "white" ? WhiteQueen : BlackQueen;
-          }
           return newPositions;
         });
-        checkForEnPassant(moveInfo, positions, setEnPassantMoves);
         updateCastlingStatus(moveInfo, setCastling);
+        if (
+          figureName(positions[moveInfo[0]]) === "pawn" &&
+          (moveInfo[1].charAt(1) === "8" || moveInfo[1].charAt(1) === "1")
+        ) {
+          setSelectedFigure([Number(moveInfo[1].charAt(0)), Number(moveInfo[1].charAt(1))]);
+          setValidMoves([]);
+          setPawnPromotion(moveInfo[1]);
+          return;
+        }
+        checkForEnPassant(moveInfo, positions, setEnPassantMoves);
         setActivePlayer((prevValue) => {
           if (prevValue === "white") return "black";
           return "white";
@@ -135,13 +152,60 @@ const Chessboard: React.FC = () => {
           selectedFigure={selectedFigure}
           validMoves={validMoves}
           check={check}
-        ></Square>
+        />
       );
     });
     return chessboard;
   };
 
-  return <div className="chessboard">{renderChessboard()}</div>;
+  const promotionClickHandler = (x: number, y: number, figure?: string) => {
+    figure &&
+      setPositions((prevPositions) => {
+        const newPositions = { ...prevPositions };
+        newPositions[pawnPromotion] = figure;
+        return newPositions;
+      });
+    setSelectedFigure(undefined);
+    setPawnPromotion("");
+    setActivePlayer((prevValue) => {
+      if (prevValue === "white") return "black";
+      return "white";
+    });
+  };
+
+  const pawnPromotions = () => {
+    const promotions: JSX.Element[] = [];
+    const whiteFigures = [WhiteQueen, WhiteKnight, WhiteRook, WhiteBishop];
+    const blackFigures = [BlackQueen, BlackKnight, BlackRook, BlackBishop];
+    const y = activePlayer === "white" ? 0 : 1;
+    for (let i = 0; i < 4; i++) {
+      promotions.push(
+        <Square
+          key={i}
+          x={0}
+          y={0}
+          color={(i + y) % 2 === 0 ? "#441a03" : "#b5915f"}
+          figure={y < 1 ? whiteFigures[i] : blackFigures[i]}
+          onClick={promotionClickHandler}
+          selectedFigure={undefined}
+          validMoves={["00"]}
+          check={check}
+        />
+      );
+    }
+    return promotions;
+  };
+
+  const classPromotions = "promotions " + activePlayer;
+
+  return (
+    <>
+      <div className="board-container">
+        {pawnPromotion && <div className={classPromotions}>{pawnPromotions()}</div>}
+        <div className="chessboard">{renderChessboard()}</div>
+      </div>
+    </>
+  );
 };
 
 export default Chessboard;

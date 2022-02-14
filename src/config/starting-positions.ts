@@ -72,4 +72,15 @@ const boardSetup = (xyNotation: [number, number][]) => {
 const startingPositions = boardSetup(xyNotation);
 
 export default startingPositions;
-export { WhiteKing, BlackKing, WhiteQueen, BlackQueen };
+export {
+  WhiteKing,
+  BlackKing,
+  WhiteQueen,
+  BlackQueen,
+  WhiteKnight,
+  BlackKnight,
+  WhiteBishop,
+  BlackBishop,
+  WhiteRook,
+  BlackRook,
+};

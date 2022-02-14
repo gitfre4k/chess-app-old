@@ -7,7 +7,7 @@ interface SquareProps {
   x: number;
   y: number;
   figure?: string;
-  onClick: (x: number, y: number) => void;
+  onClick: (x: number, y: number, figure?: string) => void;
   selectedFigure?: [number, number];
   validMoves: string[];
   check: {
@@ -42,7 +42,7 @@ const Square: React.FC<SquareProps> = ({
           ? { background: "green" }
           : { background: color }
       }
-      onClick={() => onClick(x, y)}
+      onClick={() => onClick(x, y, figure)}
     >
       {/* {x}
       {y} */}
