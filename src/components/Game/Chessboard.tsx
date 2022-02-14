@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 
 import Square from "./Square";
 import { algebraicNotation, xyNotation } from "../../config/square-notation";
-import startingPositions from "../../config/starting-positions";
+import startingPositions, { WhiteQueen, BlackQueen } from "../../config/starting-positions";
 import { figureColor, figureName } from "../../scripts/figureInfo";
 import isMoveValid from "../../scripts/move-validity/isMoveValid";
 import checkForEnPassant from "../../scripts/move-validity/checkForEnPassant";
@@ -25,6 +25,7 @@ const Chessboard: React.FC = () => {
     white: { short: true, long: true },
     black: { short: true, long: true },
   });
+  const [mate, setMate] = useState(false);
 
   useEffect(() => {
     setEnPassantMoves((prevValue) => {
@@ -38,7 +39,19 @@ const Chessboard: React.FC = () => {
       activePlayer === "white" ? (newValue.black = false) : (newValue.white = false);
       return newValue;
     });
+    let isMate = true;
+    for (let x in positions) {
+      if (!positions[x] || !positions[x]?.includes(activePlayer === "white" ? "White" : "Black"))
+        continue;
+      for (let y in positions)
+        if (isMoveValid([x, y], positions) && isKingSafe([x, y], positions)) isMate = false;
+    }
+    isMate && setMate(true);
   }, [activePlayer]);
+
+  useEffect(() => {
+    mate && (check[activePlayer] ? alert("checkmate") : alert("stalemate"));
+  }, [mate]);
 
   const squareClickHandler = (x: number, y: number) => {
     if (
@@ -91,6 +104,9 @@ const Chessboard: React.FC = () => {
           }
           newPositions[moveInfo[1]] = newPositions[moveInfo[0]];
           newPositions[moveInfo[0]] = undefined;
+          if (figureName(positions[moveInfo[0]]) === "pawn" && moveInfo[1].charAt(1) === "8") {
+            newPositions[moveInfo[1]] = activePlayer === "white" ? WhiteQueen : BlackQueen;
+          }
           return newPositions;
         });
         checkForEnPassant(moveInfo, positions, setEnPassantMoves);
