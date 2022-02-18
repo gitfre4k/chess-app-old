@@ -1,16 +1,18 @@
 import { xyNotation } from "./square-notation";
-import BlackBishop from "../img/BlackBishop.png";
-import BlackKing from "../img/BlackKing.png";
-import BlackKnight from "../img/BlackKnight.png";
-import BlackPawn from "../img/BlackPawn.png";
-import BlackQueen from "../img/BlackQueen.png";
-import BlackRook from "../img/BlackRook.png";
-import WhiteBishop from "../img/WhiteBishop.png";
-import WhiteKing from "../img/WhiteKing.png";
-import WhiteKnight from "../img/WhiteKnight.png";
-import WhitePawn from "../img/WhitePawn.png";
-import WhiteQueen from "../img/WhiteQueen.png";
-import WhiteRook from "../img/WhiteRook.png";
+import {
+  BlackBishop,
+  BlackKing,
+  BlackKnight,
+  BlackPawn,
+  BlackQueen,
+  BlackRook,
+  WhiteBishop,
+  WhiteKing,
+  WhiteKnight,
+  WhitePawn,
+  WhiteQueen,
+  WhiteRook,
+} from "../constants/figures";
 
 const setFigure = (index: number) => {
   switch (index) {

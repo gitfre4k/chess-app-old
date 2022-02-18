@@ -6,8 +6,10 @@ import bishopValidity from "./figures/bishop";
 import queenValidity from "./figures/queen";
 import kingValidity from "./figures/king";
 
+import { Ifigure } from "../../interfaces/interfaces";
+
 const isMoveValid = (
-  moveInfo: string[],
+  moveInfo: [Ifigure, { x: number; y: number; xy: string }],
   positions: {
     [key: string]: string | undefined;
   },
@@ -26,9 +28,10 @@ const isMoveValid = (
     };
   }
 ) => {
-  const figure = figureName(positions[moveInfo[0]]);
-  if (figureColor(positions[moveInfo[0]]) === figureColor(positions[moveInfo[1]])) return false;
-  switch (figure) {
+  // const figure = figureName(positions[moveInfo[0]]);
+  const [figure, destination] = moveInfo;
+  if (figure.color === figureColor(positions[destination.xy])) return false;
+  switch (figure.name) {
     case "pawn":
       return pawnValidity(moveInfo, positions, enPassantMoves);
     case "rook":

@@ -1,8 +1,7 @@
-import xyAxis from "../../xyAxis";
-import { figureColor } from "../../figureInfo";
+import { Ifigure } from "../../../interfaces/interfaces";
 
 const pawnValidity = (
-  moveInfo: string[],
+  moveInfo: [Ifigure, { x: number; y: number; xy: string }],
   positions: {
     [key: string]: string | undefined;
   },
@@ -11,23 +10,21 @@ const pawnValidity = (
     black: [string[], string] | undefined;
   }
 ) => {
-  const [figure, destination] = xyAxis(moveInfo);
-  const player = figureColor(positions[moveInfo[0]]);
-  let i: number;
-  player === "white" ? (i = 1) : (i = -1);
+  const [figure, destination] = moveInfo;
+  const player = figure.color;
+  let i = player === "white" ? 1 : -1;
   if (
     enPassantMoves &&
-    player !== "error" &&
-    enPassantMoves[player]?.[0].includes(moveInfo[0]) &&
-    enPassantMoves[player]?.[1] === moveInfo[1]
+    enPassantMoves[player]?.[0].includes(figure.xy) &&
+    enPassantMoves[player]?.[1] === destination.xy
   )
     return true;
-  if (!positions[moveInfo[1]] && figure.x === destination.x) {
+  if (!positions[destination.xy] && figure.x === destination.x) {
     if (figure.y + 1 * i === destination.y) return true;
     if (figure.y + 2 * i === destination.y && !positions[`${figure.x}${figure.y + 1 * i}`])
       if ((i === 1 && figure.y === 2) || (i === -1 && figure.y === 7)) return true;
   }
-  if (positions[moveInfo[1]] && figure.y + 1 * i === destination.y) {
+  if (positions[destination.xy] && figure.y + 1 * i === destination.y) {
     if (figure.x + 1 === destination.x || figure.x - 1 === destination.x) return true;
   }
   return false;

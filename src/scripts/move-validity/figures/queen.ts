@@ -1,8 +1,10 @@
 import rookValidity from "./rook";
 import bishopValidity from "./bishop";
 
+import { Ifigure } from "../../../interfaces/interfaces";
+
 const queenValidity = (
-  moveInfo: string[],
+  moveInfo: [Ifigure, { x: number; y: number; xy: string }],
   positions: {
     [key: string]: string | undefined;
   }

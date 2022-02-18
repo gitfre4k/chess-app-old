@@ -1,12 +1,12 @@
-import xyAxis from "../xyAxis";
+import { Ifigure } from "../../interfaces/interfaces";
 
 const isPathFree = (
-  moveInfo: string[],
+  moveInfo: [Ifigure, { x: number; y: number; xy: string }],
   positions: {
     [key: string]: string | undefined;
   }
 ) => {
-  const [figure, destination] = xyAxis(moveInfo);
+  const [figure, destination] = moveInfo;
   if (figure.x === destination.x) {
     for (let i = 1; i < Math.abs(figure.y - destination.y); i++) {
       if (positions[`${figure.x}${Math.min(figure.y, destination.y) + i}`]) return false;

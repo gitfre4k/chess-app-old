@@ -1,4 +1,4 @@
-import Chessboard from "./components/Game/Chessboard";
+import Chessboard from "./components/Game/Chessboard/Chessboard";
 
 import "./App.css";
 

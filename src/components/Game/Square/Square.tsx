@@ -1,14 +1,17 @@
-import Figure from "./Figure";
+import getFigureInfo from "./logic/getFigureInfo";
+
+import { Ifigure } from "../../../interfaces/interfaces";
 
 import "./Square.css";
 
 interface SquareProps {
-  color: string;
+  squareColor: string;
   x: number;
   y: number;
-  figure?: string;
-  onClick: (x: number, y: number, figure?: string) => void;
-  selectedFigure?: [number, number];
+  notation: string;
+  piece?: string;
+  onClick: (x: number, y: number, figure?: Ifigure) => void;
+  selectedFigure?: Ifigure;
   validMoves: string[];
   check: {
     white: boolean;
@@ -17,10 +20,10 @@ interface SquareProps {
 }
 
 const Square: React.FC<SquareProps> = ({
-  color,
+  squareColor,
   x,
   y,
-  figure,
+  piece,
   onClick,
   selectedFigure,
   validMoves,
@@ -29,24 +32,27 @@ const Square: React.FC<SquareProps> = ({
   let squareClass = "square ";
   if (validMoves.includes(`${x}${y}`)) squareClass = squareClass + "valid-move ";
   if (
-    (check.white && figure?.includes("WhiteKing")) ||
-    (check.black && figure?.includes("BlackKing"))
-  )
+    (check.white && piece?.includes("WhiteKing")) ||
+    (check.black && piece?.includes("BlackKing"))
+  ) {
     squareClass = squareClass + "check";
+  }
+
+  const figure = getFigureInfo(x, y, piece);
 
   return (
     <div
       className={squareClass}
       style={
-        selectedFigure && selectedFigure[0] === x && selectedFigure[1] === y
+        selectedFigure && selectedFigure.x === x && selectedFigure.y === y
           ? { background: "green" }
-          : { background: color }
+          : { background: squareColor }
       }
       onClick={() => onClick(x, y, figure)}
     >
       {/* {x}
       {y} */}
-      {figure && <Figure src={figure} />}
+      {piece && <img className="figure" src={piece} />}
     </div>
   );
 };
