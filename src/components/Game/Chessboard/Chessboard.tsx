@@ -1,58 +1,35 @@
-import { useState, useEffect } from "react";
-
+import { useEffect } from "react";
 import useTurnSwitch from "./logic/useTurnSwitch";
 import usePositions from "./logic/usePositions";
 import useFigure from "./logic/useFigure";
 import useEnPassant from "./logic/useEnPassant";
 import useCastling from "./logic/useCastling";
-
-import { Ifigure } from "../../../interfaces/interfaces";
+import usePawnPromotion from "./logic/usePawnPromotion";
+import useCheckMate from "./logic/useCheckMate";
 
 import Square from "../Square/Square";
-import { algebraicNotation, xyNotation } from "../../../config/square-notation";
-import startingPositions, {
-  WhiteQueen,
-  BlackQueen,
-  WhiteKnight,
-  BlackKnight,
-  WhiteBishop,
-  BlackBishop,
-  WhiteRook,
-  BlackRook,
-} from "../../../config/starting-positions";
-import { figureColor, figureName } from "../../../scripts/figureInfo";
+
 import isMoveValid from "../../../scripts/move-validity/isMoveValid";
 import isKingSafe from "../../../scripts/move-validity/isKingSafe";
+import { xyNotation, algebraicNotation } from "../../../config/square-notation";
+import * as f from "../../../constants/figures";
 
+import { Ifigure } from "../../../interfaces/interfaces";
 import "./Chessboard.css";
 
 const Chessboard: React.FC = () => {
-  const [check, setCheck] = useState({ white: false, black: false });
-  const [pawnPromotion, setPawnPromotion] = useState("");
-  const [mate, setMate] = useState(false);
-
-  const { positions, updatePositions, promotePawn } = usePositions();
+  const { positions, updatePositions, upgradePawn } = usePositions();
   const { activePlayer, changePlayer } = useTurnSwitch();
   const { selectedFigure, validMoves, selectFigure, deselectFigure } = useFigure();
   const { enPassantMoves, checkForEnPassant, preventEnPassant } = useEnPassant();
   const { castling, updateCastlingStatus } = useCastling();
+  const { pawnPromotion, promotePawn, endPawnPromotion } = usePawnPromotion();
+  const { check, mate, updateCheckStatus, checkForMate } = useCheckMate();
 
   useEffect(() => {
     preventEnPassant(activePlayer);
-    setCheck((prevValue) => {
-      const newValue = { ...prevValue };
-      newValue[activePlayer] = !isKingSafe(["CHECK", activePlayer], positions);
-      activePlayer === "white" ? (newValue.black = false) : (newValue.white = false);
-      return newValue;
-    });
-    // let isMate = true;
-    // for (let x in positions) {
-    //   if (!positions[x] || !positions[x]?.includes(activePlayer === "white" ? "White" : "Black"))
-    //     continue;
-    //   for (let y in positions)
-    //     if (isMoveValid([x, y], positions) && isKingSafe([x, y], positions)) isMate = false;
-    // }
-    // isMate && setMate(true);
+    updateCheckStatus(activePlayer, positions);
+    checkForMate(activePlayer, positions);
   }, [activePlayer, pawnPromotion]);
 
   useEffect(() => {
@@ -70,29 +47,34 @@ const Chessboard: React.FC = () => {
         deselectFigure();
         return;
       }
-      const moveInfo = [selectedFigure.xy, `${x}${y}`];
-
       const moveInfo1: [Ifigure, { x: number; y: number; xy: string }] = [
         selectedFigure,
         { x, y, xy: `${x}${y}` },
       ];
-
+      const moveInfo2 = [selectedFigure.xy, `${x}${y}`];
       if (
         isMoveValid(moveInfo1, positions, enPassantMoves, castling) &&
-        isKingSafe(moveInfo, positions)
+        isKingSafe(moveInfo2, positions)
       ) {
         updatePositions(moveInfo1, activePlayer, enPassantMoves);
         updateCastlingStatus(moveInfo1);
         if (selectedFigure.name === "pawn" && (y === 8 || y === 1)) {
           figure && selectFigure(figure, positions, enPassantMoves, castling, true);
-          setPawnPromotion(`${x}${y}`);
+          promotePawn(`${x}${y}`);
           return;
         }
-        checkForEnPassant(moveInfo, positions);
+        checkForEnPassant(moveInfo2, positions);
         changePlayer();
       }
       deselectFigure();
     }
+  };
+
+  const promotionClickHandler = (x: number, y: number, figure?: Ifigure) => {
+    figure?.piece && upgradePawn(pawnPromotion, figure.piece);
+    deselectFigure();
+    endPawnPromotion();
+    changePlayer();
   };
 
   const renderChessboard = () => {
@@ -116,17 +98,10 @@ const Chessboard: React.FC = () => {
     return chessboard;
   };
 
-  const promotionClickHandler = (x: number, y: number, figure?: Ifigure) => {
-    figure?.piece && promotePawn(pawnPromotion, figure.piece);
-    deselectFigure();
-    setPawnPromotion("");
-    changePlayer();
-  };
-
-  const pawnPromotions = () => {
+  const renderPawnPromotions = () => {
     const promotions: JSX.Element[] = [];
-    const whiteFigures = [WhiteQueen, WhiteKnight, WhiteRook, WhiteBishop];
-    const blackFigures = [BlackQueen, BlackKnight, BlackRook, BlackBishop];
+    const whiteFigures = [f.WhiteQueen, f.WhiteKnight, f.WhiteRook, f.WhiteBishop];
+    const blackFigures = [f.BlackQueen, f.BlackKnight, f.BlackRook, f.BlackBishop];
     const y = activePlayer === "white" ? 0 : 1;
     for (let i = 0; i < 4; i++) {
       promotions.push(
@@ -152,7 +127,7 @@ const Chessboard: React.FC = () => {
   return (
     <>
       <div className="board-container">
-        {pawnPromotion && <div className={classPromotions}>{pawnPromotions()}</div>}
+        {pawnPromotion && <div className={classPromotions}>{renderPawnPromotions()}</div>}
         <div className="chessboard">{renderChessboard()}</div>
       </div>
     </>

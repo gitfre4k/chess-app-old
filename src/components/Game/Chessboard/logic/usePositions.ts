@@ -46,7 +46,7 @@ const usePositions = () => {
     });
   };
 
-  const promotePawn = (pawn: string, figure: string) => {
+  const upgradePawn = (pawn: string, figure: string) => {
     setPositions((prevPositions) => {
       const newPositions = { ...prevPositions };
       newPositions[pawn] = figure;
@@ -54,7 +54,7 @@ const usePositions = () => {
     });
   };
 
-  return { positions, updatePositions, promotePawn };
+  return { positions, updatePositions, upgradePawn };
 };
 
 export default usePositions;
