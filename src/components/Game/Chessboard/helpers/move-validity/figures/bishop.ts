@@ -1,13 +1,8 @@
 import isPathFree from "../isPathFree";
 
-import { Ifigure } from "../../../interfaces/interfaces";
+import { IFigure, IDestination, IPositions } from "../../../interfaces";
 
-const bishopValidity = (
-  moveInfo: [Ifigure, { x: number; y: number; xy: string }],
-  positions: {
-    [key: string]: string | undefined;
-  }
-) => {
+const bishopValidity = (moveInfo: [IFigure, IDestination], positions: IPositions) => {
   const [figure, destination] = moveInfo;
   const xGap = Math.abs(figure.x - destination.x);
   const yGap = Math.abs(figure.y - destination.y);

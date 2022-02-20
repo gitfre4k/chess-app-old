@@ -1,8 +1,8 @@
 import { useState } from "react";
 
-import isKingSafe from "../../../../scripts/move-validity/isKingSafe";
-import isMoveValid from "../../../../scripts/move-validity/isMoveValid";
-import { getFigureByXY } from "../../../../scripts/figureInfo";
+import isKingSafe from "../helpers/move-validity/isKingSafe";
+import isMoveValid from "../helpers/move-validity/isMoveValid";
+import { getFigureByXY } from "../helpers/figure-info";
 
 const useCheckMate = () => {
   const [check, setCheck] = useState({ white: false, black: false });
@@ -26,12 +26,12 @@ const useCheckMate = () => {
     positions: { [key: string]: string | undefined }
   ) => {
     let isMate = true;
-    for (let xy1 in positions) {
-      const figure = getFigureByXY(xy1, positions);
+    for (let xy in positions) {
+      const figure = getFigureByXY(xy, positions);
       if (!figure || figure.color !== activePlayer) continue;
-      for (let xy2 in positions) {
-        const destionation = { x: Number(xy2.charAt(0)), y: Number(xy2.charAt(1)), xy: xy2 };
-        if (isMoveValid([figure, destionation], positions) && isKingSafe([xy1, xy2], positions))
+      for (let ij in positions) {
+        const destionation = { x: Number(ij.charAt(0)), y: Number(ij.charAt(1)), xy: ij };
+        if (isMoveValid([figure, destionation], positions) && isKingSafe([xy, ij], positions))
           isMate = false;
       }
     }

@@ -1,26 +1,16 @@
 import { useState } from "react";
 
-import startingPositions from "../../../../config/starting-positions";
+import startingPositions from "../constants/starting-positions";
 
-import { Ifigure } from "../../../../interfaces/interfaces";
+import { IFigure, IEnPassantMoves, IDestination } from "../interfaces";
 
 const usePositions = () => {
   const [positions, setPositions] = useState(startingPositions);
 
   const updatePositions = (
-    moveInfo: [
-      Ifigure,
-      {
-        x: number;
-        y: number;
-        xy: string;
-      }
-    ],
+    moveInfo: [IFigure, IDestination],
     activePlayer: "white" | "black",
-    enPassantMoves: {
-      white: [string[], string] | undefined;
-      black: [string[], string] | undefined;
-    }
+    enPassantMoves: IEnPassantMoves
   ) => {
     const [figure, destination] = moveInfo;
 

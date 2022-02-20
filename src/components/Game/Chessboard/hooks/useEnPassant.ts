@@ -1,22 +1,18 @@
 import { useState } from "react";
 
-import xyAxis from "../../../../scripts/xyAxis";
-import { figureName, figureColor } from "../../../../scripts/figureInfo";
+import { figureName, figureColor, getAxis } from "../helpers/figure-info";
+
+import { IEnPassantMoves, IPositions } from "../interfaces";
 
 const useEnPassant = () => {
-  const [enPassantMoves, setEnPassantMoves] = useState<{
-    white: [string[], string] | undefined;
-    black: [string[], string] | undefined;
-  }>({ white: undefined, black: undefined });
+  const [enPassantMoves, setEnPassantMoves] = useState<IEnPassantMoves>({
+    white: undefined,
+    black: undefined,
+  });
 
-  const checkForEnPassant = (
-    moveInfo: string[],
-    positions: {
-      [key: string]: string | undefined;
-    }
-  ) => {
+  const checkForEnPassant = (moveInfo: string[], positions: IPositions) => {
     if (figureName(positions[moveInfo[0]]) === "pawn") {
-      const [figure, destination] = xyAxis(moveInfo);
+      const [figure, destination] = getAxis(moveInfo);
       const player = figureColor(positions[moveInfo[0]]);
       let i: number;
       player === "white" ? (i = 1) : (i = -1);

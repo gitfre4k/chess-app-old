@@ -1,12 +1,8 @@
-import { Ifigure } from "../../interfaces/interfaces";
+import { IFigure, IDestination, IPositions } from "../../interfaces";
 
-const isPathFree = (
-  moveInfo: [Ifigure, { x: number; y: number; xy: string }],
-  positions: {
-    [key: string]: string | undefined;
-  }
-) => {
+const isPathFree = (moveInfo: [IFigure, IDestination], positions: IPositions) => {
   const [figure, destination] = moveInfo;
+
   if (figure.x === destination.x) {
     for (let i = 1; i < Math.abs(figure.y - destination.y); i++) {
       if (positions[`${figure.x}${Math.min(figure.y, destination.y) + i}`]) return false;

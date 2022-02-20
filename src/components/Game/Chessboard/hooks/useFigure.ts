@@ -1,32 +1,18 @@
 import { useState } from "react";
-import isMoveValid from "../../../../scripts/move-validity/isMoveValid";
-import isKingSafe from "../../../../scripts/move-validity/isKingSafe";
+import isMoveValid from "../helpers/move-validity/isMoveValid";
+import isKingSafe from "../helpers/move-validity/isKingSafe";
 
-import { Ifigure } from "../../../../interfaces/interfaces";
+import { IFigure, IDestination, IEnPassantMoves, ICastling, IPositions } from "../interfaces";
 
 const useFigure = () => {
-  const [selectedFigure, setSelectedFigure] = useState<Ifigure | undefined>(undefined);
+  const [selectedFigure, setSelectedFigure] = useState<IFigure | undefined>(undefined);
   const [validMoves, setValidMoves] = useState<string[]>([]);
 
   const selectFigure = (
-    figure: Ifigure,
-    positions: {
-      [key: string]: string | undefined;
-    },
-    enPassantMoves: {
-      white: [string[], string] | undefined;
-      black: [string[], string] | undefined;
-    },
-    castling: {
-      white: {
-        short: boolean;
-        long: boolean;
-      };
-      black: {
-        short: boolean;
-        long: boolean;
-      };
-    },
+    figure: IFigure,
+    positions: IPositions,
+    enPassantMoves: IEnPassantMoves,
+    castling: ICastling,
     promotion?: boolean
   ) => {
     setSelectedFigure(figure);
@@ -37,7 +23,7 @@ const useFigure = () => {
     const allValidMoves: string[] = [];
     for (const [key] of Object.entries(positions)) {
       const moveInfo = [figure.xy, `${key}`];
-      const moveInfo1: [Ifigure, { x: number; y: number; xy: string }] = [
+      const moveInfo1: [IFigure, IDestination] = [
         figure,
         { x: Number(key.charAt(0)), y: Number(key.charAt(1)), xy: key },
       ];

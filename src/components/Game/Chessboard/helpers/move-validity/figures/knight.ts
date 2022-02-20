@@ -1,6 +1,6 @@
-import { Ifigure } from "../../../interfaces/interfaces";
+import { IFigure, IDestination } from "../../../interfaces";
 
-const knightValidity = (moveInfo: [Ifigure, { x: number; y: number; xy: string }]) => {
+const knightValidity = (moveInfo: [IFigure, IDestination]) => {
   const [figure, destination] = moveInfo;
   const xGap = Math.abs(figure.x - destination.x);
   const yGap = Math.abs(figure.y - destination.y);

@@ -1,14 +1,9 @@
 import rookValidity from "./rook";
 import bishopValidity from "./bishop";
 
-import { Ifigure } from "../../../interfaces/interfaces";
+import { IFigure, IDestination, IPositions } from "../../../interfaces";
 
-const queenValidity = (
-  moveInfo: [Ifigure, { x: number; y: number; xy: string }],
-  positions: {
-    [key: string]: string | undefined;
-  }
-) => {
+const queenValidity = (moveInfo: [IFigure, IDestination], positions: IPositions) => {
   if (rookValidity(moveInfo, positions) || bishopValidity(moveInfo, positions)) return true;
   return false;
 };

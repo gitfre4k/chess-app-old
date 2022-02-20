@@ -1,25 +1,12 @@
-import xyAxis from "../../xyAxis";
-import { figureColor } from "../../figureInfo";
 import isPathFree from "../isPathFree";
 import isKingSafe from "../isKingSafe";
 
-import { Ifigure } from "../../../interfaces/interfaces";
+import { IFigure, IDestination, IPositions, ICastling } from "../../../interfaces";
 
 const kingValidity = (
-  moveInfo: [Ifigure, { x: number; y: number; xy: string }],
-  positions: {
-    [key: string]: string | undefined;
-  },
-  castling?: {
-    white: {
-      short: boolean;
-      long: boolean;
-    };
-    black: {
-      short: boolean;
-      long: boolean;
-    };
-  }
+  moveInfo: [IFigure, IDestination],
+  positions: IPositions,
+  castling?: ICastling
 ) => {
   const [figure, destination] = moveInfo;
   if (figure.x === destination.x && Math.abs(figure.y - destination.y) === 1) return true;
@@ -41,7 +28,6 @@ const kingValidity = (
         castling[activePlayer].short &&
         destination.x === 7 &&
         isPathFree([figure, { x: 8, y: i, xy: "8" + i }], positions) &&
-        // { x: 8, y: i, xy: "8" + i }
         isKingSafe([figure.xy, "6" + i], positions)
       )
         return true;

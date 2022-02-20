@@ -1,4 +1,4 @@
-import { figureName, figureColor } from "../figureInfo";
+import { figureColor } from "../figure-info";
 import pawnValidity from "./figures/pawn";
 import rookValidity from "./figures/rook";
 import knightValidity from "./figures/knight";
@@ -6,29 +6,14 @@ import bishopValidity from "./figures/bishop";
 import queenValidity from "./figures/queen";
 import kingValidity from "./figures/king";
 
-import { Ifigure } from "../../interfaces/interfaces";
+import { IFigure, IDestination, IPositions, IEnPassantMoves, ICastling } from "../../interfaces";
 
 const isMoveValid = (
-  moveInfo: [Ifigure, { x: number; y: number; xy: string }],
-  positions: {
-    [key: string]: string | undefined;
-  },
-  enPassantMoves?: {
-    white: [string[], string] | undefined;
-    black: [string[], string] | undefined;
-  },
-  castling?: {
-    white: {
-      short: boolean;
-      long: boolean;
-    };
-    black: {
-      short: boolean;
-      long: boolean;
-    };
-  }
+  moveInfo: [IFigure, IDestination],
+  positions: IPositions,
+  enPassantMoves?: IEnPassantMoves,
+  castling?: ICastling
 ) => {
-  // const figure = figureName(positions[moveInfo[0]]);
   const [figure, destination] = moveInfo;
   if (figure.color === figureColor(positions[destination.xy])) return false;
   switch (figure.name) {

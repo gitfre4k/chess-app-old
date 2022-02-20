@@ -1,14 +1,9 @@
-import { Ifigure } from "../../../interfaces/interfaces";
+import { IFigure, IDestination, IPositions, IEnPassantMoves } from "../../../interfaces";
 
 const pawnValidity = (
-  moveInfo: [Ifigure, { x: number; y: number; xy: string }],
-  positions: {
-    [key: string]: string | undefined;
-  },
-  enPassantMoves?: {
-    white: [string[], string] | undefined;
-    black: [string[], string] | undefined;
-  }
+  moveInfo: [IFigure, IDestination],
+  positions: IPositions,
+  enPassantMoves?: IEnPassantMoves
 ) => {
   const [figure, destination] = moveInfo;
   const player = figure.color;

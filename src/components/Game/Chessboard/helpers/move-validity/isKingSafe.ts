@@ -1,5 +1,5 @@
-import { WhiteKing, BlackKing } from "../../config/starting-positions";
-import { figureColor, getFigureByXY } from "../figureInfo";
+import { WhiteKing, BlackKing } from "../../constants/figures";
+import { figureColor, getFigureByXY } from "../figure-info";
 import isMoveValid from "./isMoveValid";
 
 const isKingSafe = (moveInfo: string[], positions: { [key: string]: string | undefined }) => {

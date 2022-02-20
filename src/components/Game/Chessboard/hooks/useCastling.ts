@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { Ifigure } from "../../../../interfaces/interfaces";
+import { IFigure, IDestination } from "../interfaces";
 
 const useCastling = () => {
   const [castling, setCastling] = useState({
@@ -8,16 +8,7 @@ const useCastling = () => {
     black: { short: true, long: true },
   });
 
-  const updateCastlingStatus = (
-    moveInfo: [
-      Ifigure,
-      {
-        x: number;
-        y: number;
-        xy: string;
-      }
-    ]
-  ) => {
+  const updateCastlingStatus = (moveInfo: [IFigure, IDestination]) => {
     const [figure, destination] = moveInfo;
     const castlingFigures: { [key: string]: string } = {
       whiteKing: "51",
@@ -28,11 +19,11 @@ const useCastling = () => {
       blackRookLong: "18",
     };
 
-    for (const figurePosition in castlingFigures) {
-      if ([figure.xy, destination.xy].includes(castlingFigures[figurePosition])) {
+    for (const defaultPosition in castlingFigures) {
+      if ([figure.xy, destination.xy].includes(castlingFigures[defaultPosition])) {
         setCastling((prevValue) => {
           const newValue = { ...prevValue };
-          switch (castlingFigures[figurePosition]) {
+          switch (castlingFigures[defaultPosition]) {
             case "51":
               newValue.white.short = false;
               newValue.white.long = false;

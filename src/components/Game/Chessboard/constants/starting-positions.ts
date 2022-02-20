@@ -1,34 +1,21 @@
 import { xyNotation } from "./square-notation";
-import {
-  BlackBishop,
-  BlackKing,
-  BlackKnight,
-  BlackPawn,
-  BlackQueen,
-  BlackRook,
-  WhiteBishop,
-  WhiteKing,
-  WhiteKnight,
-  WhitePawn,
-  WhiteQueen,
-  WhiteRook,
-} from "../constants/figures";
+import * as figure from "./figures";
 
 const setFigure = (index: number) => {
   switch (index) {
     case 0:
     case 7:
-      return BlackRook;
+      return figure.BlackRook;
     case 1:
     case 6:
-      return BlackKnight;
+      return figure.BlackKnight;
     case 2:
     case 5:
-      return BlackBishop;
+      return figure.BlackBishop;
     case 3:
-      return BlackQueen;
+      return figure.BlackQueen;
     case 4:
-      return BlackKing;
+      return figure.BlackKing;
     case 8:
     case 9:
     case 10:
@@ -37,7 +24,7 @@ const setFigure = (index: number) => {
     case 13:
     case 14:
     case 15:
-      return BlackPawn;
+      return figure.BlackPawn;
     case 48:
     case 49:
     case 50:
@@ -46,20 +33,20 @@ const setFigure = (index: number) => {
     case 53:
     case 54:
     case 55:
-      return WhitePawn;
+      return figure.WhitePawn;
     case 56:
     case 63:
-      return WhiteRook;
+      return figure.WhiteRook;
     case 57:
     case 62:
-      return WhiteKnight;
+      return figure.WhiteKnight;
     case 58:
     case 61:
-      return WhiteBishop;
+      return figure.WhiteBishop;
     case 59:
-      return WhiteQueen;
+      return figure.WhiteQueen;
     case 60:
-      return WhiteKing;
+      return figure.WhiteKing;
   }
 };
 
@@ -74,15 +61,3 @@ const boardSetup = (xyNotation: [number, number][]) => {
 const startingPositions = boardSetup(xyNotation);
 
 export default startingPositions;
-export {
-  WhiteKing,
-  BlackKing,
-  WhiteQueen,
-  BlackQueen,
-  WhiteKnight,
-  BlackKnight,
-  WhiteBishop,
-  BlackBishop,
-  WhiteRook,
-  BlackRook,
-};

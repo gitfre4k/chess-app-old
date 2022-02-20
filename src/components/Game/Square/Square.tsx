@@ -1,25 +1,9 @@
-import getFigureInfo from "./logic/getFigureInfo";
+import { getSquareClass, getFigure } from "./helpers";
 
-import { Ifigure } from "../../../interfaces/interfaces";
-
+import { ISquareProps } from "./interfaces";
 import "./Square.css";
 
-interface SquareProps {
-  squareColor: string;
-  x: number;
-  y: number;
-  notation: string;
-  piece?: string;
-  onClick: (x: number, y: number, figure?: Ifigure) => void;
-  selectedFigure?: Ifigure;
-  validMoves: string[];
-  check: {
-    white: boolean;
-    black: boolean;
-  };
-}
-
-const Square: React.FC<SquareProps> = ({
+const Square: React.FC<ISquareProps> = ({
   squareColor,
   x,
   y,
@@ -29,29 +13,19 @@ const Square: React.FC<SquareProps> = ({
   validMoves,
   check,
 }) => {
-  let squareClass = "square ";
-  if (validMoves.includes(`${x}${y}`)) squareClass = squareClass + "valid-move ";
-  if (
-    (check.white && piece?.includes("WhiteKing")) ||
-    (check.black && piece?.includes("BlackKing"))
-  ) {
-    squareClass = squareClass + "check";
-  }
-
-  const figure = getFigureInfo(x, y, piece);
+  const squareClass = getSquareClass(x, y, validMoves, check, piece);
+  const figure = getFigure(x, y, piece);
 
   return (
     <div
       className={squareClass}
       style={
-        selectedFigure && selectedFigure.x === x && selectedFigure.y === y
+        selectedFigure?.x === x && selectedFigure.y === y
           ? { background: "green" }
           : { background: squareColor }
       }
       onClick={() => onClick(x, y, figure)}
     >
-      {/* {x}
-      {y} */}
       {piece && <img className="figure" src={piece} />}
     </div>
   );

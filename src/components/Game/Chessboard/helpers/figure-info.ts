@@ -1,4 +1,4 @@
-import { Ifigure } from "../interfaces/interfaces";
+import { IFigure } from "../interfaces";
 
 const figureColor = (figure: string | undefined) => {
   if (!figure) return undefined;
@@ -9,24 +9,25 @@ const figureColor = (figure: string | undefined) => {
 const figureName = (piece: string | undefined) => {
   if (!piece) return undefined;
   const pieces = ["Pawn", "Rook", "Knight", "Bishop", "Queen", "King"];
-  let name;
   for (let i = 0; i < 6; i++) {
     if (piece.includes(pieces[i])) {
       switch (i) {
         case 0:
-          return (name = "pawn");
+          return "pawn";
         case 1:
-          return (name = "rook");
+          return "rook";
         case 2:
-          return (name = "knight");
+          return "knight";
         case 3:
-          return (name = "bishop");
+          return "bishop";
         case 4:
-          return (name = "queen");
+          return "queen";
+        case 5:
+          return "king";
       }
     }
   }
-  return (name = "king");
+  return undefined;
 };
 
 const getFigureByXY = (xy: string, positions: { [key: string]: string | undefined }) => {
@@ -36,8 +37,20 @@ const getFigureByXY = (xy: string, positions: { [key: string]: string | undefine
   const color = figureColor(positions[xy]);
   const piece = positions[xy];
   if (!name || !color || !piece) return undefined;
-  const figure: Ifigure = { x, y, xy, name, color, piece };
+  const figure: IFigure = { x, y, xy, name, color, piece };
   return figure;
 };
 
-export { figureColor, figureName, getFigureByXY };
+const getAxis = (moveInfo: string[]) => {
+  const figure = {
+    x: Number(moveInfo[0].charAt(0)),
+    y: Number(moveInfo[0].charAt(1)),
+  };
+  const destination = {
+    x: Number(moveInfo[1].charAt(0)),
+    y: Number(moveInfo[1].charAt(1)),
+  };
+  return [figure, destination];
+};
+
+export { figureColor, figureName, getFigureByXY, getAxis };
