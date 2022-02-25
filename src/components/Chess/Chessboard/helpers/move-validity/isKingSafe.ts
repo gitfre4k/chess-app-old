@@ -1,13 +1,15 @@
 import { WhiteKing, BlackKing } from "../../constants/figures";
-import { figureColor, getFigureByXY } from "../figure-info";
+import { getFigureColor, getFigureByXY } from "../figure-info";
 import isMoveValid from "./isMoveValid";
 
 const isKingSafe = (moveInfo: string[], positions: { [key: string]: string | undefined }) => {
-  const activePlayer = figureColor(positions[moveInfo[0]]);
-  let king =
-    activePlayer === "white" || moveInfo[1] === "white"
-      ? Object.keys(positions).find((key) => positions[key] === WhiteKing)
-      : Object.keys(positions).find((key) => positions[key] === BlackKing);
+  const activePlayer = getFigureColor(positions[moveInfo[0]]);
+  let king = Object.keys(positions).find(
+    (key) =>
+      positions[key] ===
+      (activePlayer === "white" || moveInfo[1] === "white" ? WhiteKing : BlackKing)
+  );
+  Object.keys(positions).find((key) => positions[key] === BlackKing);
   if (king === moveInfo[0]) king = moveInfo[1];
 
   if (moveInfo[0] === "CHECK")
@@ -23,7 +25,6 @@ const isKingSafe = (moveInfo: string[], positions: { [key: string]: string | und
   const xPositions = { ...positions };
   xPositions[moveInfo[1]] = xPositions[moveInfo[0]];
   xPositions[moveInfo[0]] = undefined;
-
   for (let key in xPositions) {
     if (king) {
       const figure = getFigureByXY(key, xPositions);

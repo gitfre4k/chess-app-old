@@ -1,4 +1,4 @@
-import { figureColor } from "../figure-info";
+import { getFigureColor } from "../figure-info";
 import pawnValidity from "./figures/pawn";
 import rookValidity from "./figures/rook";
 import knightValidity from "./figures/knight";
@@ -15,7 +15,7 @@ const isMoveValid = (
   castling?: ICastling
 ) => {
   const [figure, destination] = moveInfo;
-  if (figure.color === figureColor(positions[destination.xy])) return false;
+  if (figure.color === getFigureColor(positions[destination.xy])) return false;
   switch (figure.name) {
     case "pawn":
       return pawnValidity(moveInfo, positions, enPassantMoves);

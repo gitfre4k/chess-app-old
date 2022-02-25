@@ -1,4 +1,4 @@
-import { figureName } from "../../Chessboard/helpers/figure-info";
+import { getFigureName } from "../../Chessboard/helpers/figure-info";
 
 import { ICheck } from "../interfaces";
 
@@ -23,7 +23,7 @@ const getFigure = (x: number, y: number, piece?: string) => {
   if (!piece) return undefined;
   const color: "white" | "black" = piece.includes("White") ? "white" : "black";
   const name: "pawn" | "rook" | "knight" | "bishop" | "queen" | "king" | undefined =
-    figureName(piece);
+    getFigureName(piece);
   if (!name) return undefined;
   const figureInfo = {
     x,

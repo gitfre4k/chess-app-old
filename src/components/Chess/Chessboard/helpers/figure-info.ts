@@ -1,12 +1,12 @@
 import { IFigure } from "../interfaces";
 
-const figureColor = (figure: string | undefined) => {
+const getFigureColor = (figure: string | undefined) => {
   if (!figure) return undefined;
   if (figure.includes("White")) return "white";
   return "black";
 };
 
-const figureName = (piece: string | undefined) => {
+const getFigureName = (piece: string | undefined) => {
   if (!piece) return undefined;
   const pieces = ["Pawn", "Rook", "Knight", "Bishop", "Queen", "King"];
   for (let i = 0; i < 6; i++) {
@@ -33,8 +33,8 @@ const figureName = (piece: string | undefined) => {
 const getFigureByXY = (xy: string, positions: { [key: string]: string | undefined }) => {
   const x = Number(xy.charAt(0));
   const y = Number(xy.charAt(1));
-  const name = figureName(positions[xy]);
-  const color = figureColor(positions[xy]);
+  const name = getFigureName(positions[xy]);
+  const color = getFigureColor(positions[xy]);
   const piece = positions[xy];
   if (!name || !color || !piece) return undefined;
   const figure: IFigure = { x, y, xy, name, color, piece };
@@ -53,4 +53,4 @@ const getAxis = (moveInfo: string[]) => {
   return [figure, destination];
 };
 
-export { figureColor, figureName, getFigureByXY, getAxis };
+export { getFigureColor, getFigureName, getFigureByXY, getAxis };

@@ -1,11 +1,11 @@
-import Chessboard from "./components/Game/Chessboard";
+import Chess from "./components/Chess";
 
 import "./App.css";
 
 const App = () => {
   return (
     <main className="container">
-      <Chessboard />
+      <Chess />
     </main>
   );
 };
